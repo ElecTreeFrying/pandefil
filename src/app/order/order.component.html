@@ -3,27 +3,28 @@
 
   <span>Order form</span>
 
-  <!-- <button mat-icon-button [matMenuTriggerFor]="formMenu">
+  <button mat-icon-button [matMenuTriggerFor]="formMenu">
     <mat-icon>more_vert</mat-icon>
   </button>
 
   <mat-menu #formMenu="matMenu" xPosition="before" yPosition="below">
-    <button mat-menu-item>Settings</button>
-    <button mat-menu-item>Help</button>
-  </mat-menu> -->
+    <button mat-menu-item>Personal information</button>
+    <button mat-menu-item>Re-enter email</button>
+    <button mat-menu-item>Exit</button>
+  </mat-menu>
 
 </mat-toolbar>
 
 <div class="content" data-simplebar>
 
-  <mat-vertical-stepper linear="true" (selectionChange)="process()" class="item" #stepper *ngIf="steps[0]"> 
+  <mat-vertical-stepper linear="false" (selectionChange)="process()" class="item" #stepper *ngIf="steps[0]"> 
 
     <!-- step a -->
 
     <mat-step [stepControl]="formA" *ngIf="steps[1]">
       <form [formGroup]="formA" class="step-a">
 
-        <ng-template matStepLabel>Fill out A</ng-template>
+        <ng-template matStepLabel>Order</ng-template>
 
         <div formArrayName="orders" *ngIf="$formA.orders.controls.length > 0">
           <div *ngFor="let order of $formA.orders.controls; let i = index" [formGroupName]="i">
@@ -62,7 +63,7 @@
     <mat-step [stepControl]="formB" *ngIf="steps[2]">
       <form [formGroup]="formB" class="step-b">
 
-        <ng-template matStepLabel>Fill out B</ng-template>
+        <ng-template matStepLabel>Add-on</ng-template>
 
         <mat-form-field appearance="outline">
           <mat-label>Bread</mat-label>
@@ -111,7 +112,7 @@
     <mat-step [stepControl]="formC" *ngIf="steps[3]">
       <form [formGroup]="formC" class="step-c">
 
-        <ng-template matStepLabel>Fill out C</ng-template>
+        <ng-template matStepLabel>Update personal information</ng-template>
 
         <mat-form-field appearance="outline">
           <mat-label>First name</mat-label>
@@ -151,7 +152,7 @@
     <mat-step [stepControl]="formD" *ngIf="steps[4]">
       <form [formGroup]="formD" class="step-d">
 
-        <ng-template matStepLabel>Fill out D</ng-template>
+        <ng-template matStepLabel>Service and delivery</ng-template>
 
         <mat-form-field appearance="outline">
           <mat-label>Services</mat-label>

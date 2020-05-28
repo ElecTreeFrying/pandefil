@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 
 export const formA = {
   order: [ '', [  ] ],
@@ -5,9 +6,9 @@ export const formA = {
 };
 
 export const formB = {
-  bread: [ '', [  ] ],
-  crumbs: [ '', [  ] ],
-  filings: [ '', [  ] ],
+  bread: [ 'Plain', [  ] ],
+  crumbs: [ 'Bread Crumbs', [  ] ],
+  filings: [ 'Plain', [  ] ],
   notes: [ '', [  ] ]
 };
 
@@ -20,7 +21,7 @@ export const formC = {
 };
 
 export const formD = {
-  services: [ '', [  ] ],
-  date: [ '', [  ] ],
-  time: [ '', [  ] ]
+  services: [ 'Pick up', [  ] ],
+  date: [ moment().format('MMMM Do YYYY'), [  ] ],
+  time: [ '12:00 pm', [  ] ]
 };

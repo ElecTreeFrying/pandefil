@@ -146,7 +146,9 @@ export class OrderComponent implements OnInit {
 
   process() {
 
-    const price = this.formA.value.orders.map((res) => {
+    if (this.formA.invalid || this.formB.invalid || this.formC.invalid || this.formD.invalid) return;
+
+    const price = this.formA.value.orders.map((res: any) => {
       
       const itemPrice = +res.order.split('$')[1];
       const itemQuantity = res.quantity === '' ? 1 : res.quantity;
