@@ -1,10 +1,104 @@
 
 .mat-toolbar {
 
-  //
+  position: absolute;
+  z-index: 500;
 
   .mat-icon-button {
     margin-left: auto;
+  }
+}
+
+.content {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  padding-top: 70px;
+  
+  .mat-card {
+    align-self: flex-start;
+  }
+}
+
+.step-a {
+
+  .order {
+    width: 300px;
+    margin-right: 8px;
+  }
+
+  .order-quantity {
+    width: 90px;
+    margin-right: 8px;
+  }
+
+  .order-button {
+    transform: translateY(-5px);
+    margin-right: 8px;
+  }
+  
+  .price, .quantity {
+    width: 146px;
+    margin-right: 8px;
+  }
+  
+  .price .mat-icon {
+    transform: translateY(-3px);
+  }
+}
+
+.step-b {
+
+  .mat-form-field {
+    width: 300px;
+  }
+}
+
+.step-c {
+
+  .mat-form-field {
+    width: 200px;
+    margin-right: 8px;
+  }
+
+  .address {
+    width: 400px + 8px;
+  }
+}
+
+.step-d {
+  
+  .date-picker {
+    width: 201px;
+  }
+}
+
+.order-summary {
+  width: 500px;
+  margin-top: 24px;
+
+  .head {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+  
+  .text {
+    font-family: 'Montserrat', sans-serif;
+    margin-left: 16px;
+  }
+
+  .heading {
+    font-weight: 500;
+    margin: 0 0 12px 0;
+  }
+
+  .actions {
+    margin-top: 32px;
+
+    .mat-stroked-button {
+      margin-right: 8px;
+    }
   }
 }
 

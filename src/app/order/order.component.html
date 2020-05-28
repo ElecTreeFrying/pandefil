@@ -1,17 +1,230 @@
 
 <mat-toolbar color="primary">
 
-  <span>Order forms</span>
+  <span>Order form</span>
 
-  <button mat-icon-button>
+  <!-- <button mat-icon-button [matMenuTriggerFor]="formMenu">
     <mat-icon>more_vert</mat-icon>
   </button>
 
+  <mat-menu #formMenu="matMenu" xPosition="before" yPosition="below">
+    <button mat-menu-item>Settings</button>
+    <button mat-menu-item>Help</button>
+  </mat-menu> -->
+
 </mat-toolbar>
 
+<div class="content" data-simplebar>
 
-<div class="wrap">
-  
-  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>
+  <mat-vertical-stepper linear="true" (selectionChange)="process()" class="item" #stepper *ngIf="steps[0]"> 
+
+    <!-- step a -->
+
+    <mat-step [stepControl]="formA" *ngIf="steps[1]">
+      <form [formGroup]="formA" class="step-a">
+
+        <ng-template matStepLabel>Fill out A</ng-template>
+
+        <div formArrayName="orders" *ngIf="$formA.orders.controls.length > 0">
+          <div *ngFor="let order of $formA.orders.controls; let i = index" [formGroupName]="i">
+
+            <mat-form-field appearance="outline" class="order">
+              <mat-label>New order</mat-label>
+              <mat-select required formControlName="order">
+                <mat-option *ngFor="let selection of selections.order_menu" [value]="selection.display" (click)="dynamic.formA.selections[i].state = selection.id === 4">
+                  {{ selection.display }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="order-quantity" *ngIf="dynamic?.formA?.selections[i].state">
+              <mat-label>Quantity</mat-label>
+              <input matInput required type="number" autocomplete="off" formControlName="quantity">
+            </mat-form-field>
+            <button mat-mini-fab class="order-button" *ngIf="dynamic.formA.selections[i].button && $formA.orders.length === i+1" (click)="addOrder()">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button mat-mini-fab class="order-button" *ngIf="i !== 0" (click)="removeAddedOrder(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+          </div>
+        </div>
+        
+        <div>
+          <button mat-button matStepperNext [disabled]="isNextDisable.formA">Next</button>
+        </div>
+        
+      </form>
+    </mat-step>
+    
+    <!-- step b -->
+
+    <mat-step [stepControl]="formB" *ngIf="steps[2]">
+      <form [formGroup]="formB" class="step-b">
+
+        <ng-template matStepLabel>Fill out B</ng-template>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Bread</mat-label>
+          <mat-select required formControlName="bread">
+            <mat-option *ngFor="let bread of selections.breads" [value]="bread.display">
+              {{ bread.display }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline">
+          <mat-label>Crumbs</mat-label>
+          <mat-select required formControlName="crumbs">
+            <mat-option *ngFor="let crumb of selections.crumbs" [value]="crumb.display">
+              {{ crumb.display }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline">
+          <mat-label>Filings</mat-label>
+          <mat-select required formControlName="filings">
+            <mat-option *ngFor="let filing of selections.filings" [value]="filing.display">
+              {{ filing.display }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline">
+          <mat-label>Notes</mat-label>
+          <textarea matInput matTextareaAutosize matAutosize="true" matAutosizeMinRows="5" formControlName="motes" formControlName="notes">
+          </textarea>
+        </mat-form-field> 
+        <br>
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext [disabled]="isNextDisable.formB">Next</button>
+        </div>
+        
+      </form>
+    </mat-step>
+
+    <!-- step c -->
+    
+    <mat-step [stepControl]="formC" *ngIf="steps[3]">
+      <form [formGroup]="formC" class="step-c">
+
+        <ng-template matStepLabel>Fill out C</ng-template>
+
+        <mat-form-field appearance="outline">
+          <mat-label>First name</mat-label>
+          <input matInput required autocomplete="off" formControlName="fn">
+        </mat-form-field
+        >
+        <mat-form-field appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input matInput required autocomplete="off" formControlName="ln">
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline" class="address">
+          <mat-label>Address</mat-label>
+          <input matInput required autocomplete="off" formControlName="address">
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline">
+          <mat-label>Instagram</mat-label>
+          <input matInput required autocomplete="off" formControlName="instagram">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Phone</mat-label>
+          <input matInput required autocomplete="off" type="number" formControlName="phone">
+        </mat-form-field>
+        
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext [disabled]="isNextDisable.formC">Next</button>
+        </div>
+
+      </form>
+    </mat-step>
+
+    <!-- step d -->
+
+    <mat-step [stepControl]="formD" *ngIf="steps[4]">
+      <form [formGroup]="formD" class="step-d">
+
+        <ng-template matStepLabel>Fill out D</ng-template>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Services</mat-label>
+          <mat-select required formControlName="services">
+            <mat-option *ngFor="let selection of selections.services" [value]="selection.display">
+              {{ selection.display }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>Choose a date</mat-label>
+          <input matInput required [matDatepicker]="picker" formControlName="date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline">
+          <mat-label>Time</mat-label>
+          <mat-select required formControlName="time">
+            <mat-option *ngFor="let selection of selections.time" [value]="selection.display">
+              {{ selection.display }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext [disabled]="isNextDisable.formD">Next</button>
+          <!-- <button mat-button (click)="submit()">Test Submit</button> -->
+        </div>
+
+      </form>
+    </mat-step>
+
+    <!-- step e -->
+
+    <mat-step *ngIf="steps[5]">
+      <ng-template matStepLabel>Done</ng-template>
+
+      <div class="order-summary">
+
+        <p class="head">Order summary</p>
+
+        <p class="text heading"><strong>Orders:</strong> </p>
+        
+        <p class="text" *ngFor="let item of form?.orders">• {{ item?.order | orderForm: 'order' }} - <em>({{ item | orderForm: 'quantity' }}pcs, ${{ item?.order | orderForm: 'price' }}/each)</em></p>
+        
+        <p class="text heading"><strong>Service:</strong> {{ form?.services }}</p>
+        <p class="text heading"><strong>Delivery date:</strong> {{ form?.date }} - {{ form?.time }}</p>
+        
+        <p class="text heading"><strong>Details:</strong> </p>
+        <p class="text">{{ form?.bread }} Bread with {{ form?.crumbs }} and {{ form?.fillings }}</p>
+        <p class="text heading"><strong>Notes:</strong> </p>
+        <p class="text"><em>{{ form?.notes }}</em></p>
+        
+        <p class="text heading"><strong>Total price:</strong> ${{ form?.price }}.00</p>
+        
+        <p class="text heading"><strong>Personal Information</strong></p>
+        <p class="text"><strong>Name:</strong> {{ form?.fn }} {{ form?.ln }}</p>
+        <p class="text"><strong>Instagram:</strong> {{ form?.instagram }}</p>
+        <p class="text"><strong>Contact:</strong> {{ form?.phone }}</p>
+        <p class="text"><strong>Address:</strong> {{ form?.address }} </p>
+
+        <div class="actions">
+          <button mat-stroked-button matStepperPrevious>Back</button>
+          <button mat-stroked-button (click)="submit()">Submit</button>
+        </div>
+
+      </div>
+
+    </mat-step>
+
+  </mat-vertical-stepper>
 
 </div>
