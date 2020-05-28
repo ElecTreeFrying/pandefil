@@ -7,7 +7,7 @@
 *.spec.ts
 
 # environments
-src/environments/**
+/src/environments/**
 
 # compiled output
 /dist
