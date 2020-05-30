@@ -1,0 +1,25 @@
+
+.toolbar {
+  position: absolute;
+  z-index: 500;
+  width: 100vw;;
+  
+  .mat-toolbar .mat-icon-button {
+    margin-left: auto;
+  }
+}
+
+.content {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  padding-top: 70px;
+}
+
+.mat-progress-bar {
+  position: absolute;
+}
+
+.mat-form-field {
+  width: 250px;
+}

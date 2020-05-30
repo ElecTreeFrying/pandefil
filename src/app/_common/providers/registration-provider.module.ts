@@ -1,36 +1,28 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-
-import { 
-  EmailValidatorDirective, 
-  EmptyFieldValidatorDirective 
-} from '../directives/validators.directive';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 @NgModule({
   exports: [
-    FormsModule,
+    ReactiveFormsModule,
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
-    MatTooltipModule,
+    MatStepperModule,
     MatProgressBarModule,
-    
-    EmailValidatorDirective, 
-    EmptyFieldValidatorDirective
+    MatMenuModule
   ],
   declarations: [
-    EmailValidatorDirective, 
-    EmptyFieldValidatorDirective
   ]
 })
-export class LandingPageProviderModule { }
+export class RegistrationProviderModule { }

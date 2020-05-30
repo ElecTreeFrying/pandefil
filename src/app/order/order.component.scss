@@ -52,6 +52,18 @@
   .mat-form-field {
     width: 300px;
   }
+
+  .flavor-content {
+    display: flex;
+
+    .flavor-orders {
+      width: 350px;
+      margin-right: 8px;
+    }
+
+    // .flavor-form {
+    // }
+  }
 }
 
 .step-c {
@@ -85,7 +97,16 @@
   
   .text {
     font-family: 'Montserrat', sans-serif;
-    margin-left: 16px;
+    margin: 0 0 12px 16px;
+    
+    .order {
+      margin-bottom: 6px;
+    }
+
+    .details, .notes {
+      font-size: 12px;
+      margin: 0 0 0 16px;
+    }
   }
 
   .heading {

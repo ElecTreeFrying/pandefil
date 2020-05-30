@@ -1,7 +1,30 @@
 
+<mat-progress-bar mode="indeterminate" color="warn" *ngIf="shared.$.progress | async"></mat-progress-bar>
+
 <div class="content">
 
-  <button mat-raised-button routerLink="orders" color="primary">Order now</button>
+  <div class="form">
+
+    <mat-form-field color="primary" appearance="outline" (keydown.enter)="submit()" (keyup.enter)="isKeydown = false">
+      
+      <mat-label>Email</mat-label>
+      
+      <input matInput type="email" [(ngModel)]="email" emailValidator emptyFieldValidator #emailInput="ngModel">
+      
+      <mat-error *ngIf="emailInput.errors?.emptyField">Empty field.</mat-error>
+      <mat-error *ngIf="emailInput.errors?.email">Invalid email.</mat-error>
+      
+      <button mat-icon-button matSuffix matTooltip="clear field" (click)="email= ''">
+        <mat-icon>clear</mat-icon>
+      </button>
+
+    </mat-form-field>
   
+    <button mat-icon-button color="primary" matTooltip="submit" (click)="submit()">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+
+  </div>
+
 </div>
 

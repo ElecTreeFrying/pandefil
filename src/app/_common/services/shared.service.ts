@@ -1,12 +1,31 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+import { VariableService } from './variable.service';
+import { filter, startWith } from 'rxjs/operators';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class SharedService {
+export class SharedService extends VariableService {
 
-  constructor() { }
+  private _source = {
+    progress: new BehaviorSubject(false),
+  };
+
+  $ = {
+    progress: this._source.progress.asObservable()
+  };
+
+  constructor() { 
+    super();
+  }
+
+  updateSource(key: string, data: any) {
+    this._source[key].next(data);
+  }
+
 }
 
 export const order_menu = [

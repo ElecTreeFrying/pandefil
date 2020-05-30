@@ -10,8 +10,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, ShowOnDirtyErrorStateMatcher, ErrorStateMatcher } from '@angular/material/core';
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
+import { MatListModule } from '@angular/material/list';
 
 import { OrderFormPipe } from '../pipes/order-form.pipe';
 
@@ -31,11 +32,15 @@ import { OrderFormPipe } from '../pipes/order-form.pipe';
     MatDatepickerModule,
     MatNativeDateModule, 
     MatMomentDateModule,
+    MatListModule,
     
     OrderFormPipe
   ],
   declarations: [
     OrderFormPipe
+  ],
+  providers: [
+    { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher }
   ]
 })
 export class OrderProviderModule { }

@@ -1,0 +1,124 @@
+
+<div class="toolbar">
+  <mat-toolbar color="primary">
+  
+    <span>Customer registration</span>
+  
+    <button mat-icon-button [matMenuTriggerFor]="formMenu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  
+    <mat-menu #formMenu="matMenu" xPosition="before" yPosition="below">
+      <button mat-menu-item (click)="exit()">Exit</button>
+    </mat-menu>
+  
+  </mat-toolbar>
+  
+  <mat-progress-bar mode="indeterminate" color="warn" *ngIf="shared.$.progress | async"></mat-progress-bar>
+
+</div>
+
+<div class="content">
+  <mat-vertical-stepper linear="true" class="item" #stepper *ngIf="steps[0]" [formGroup]="form"> 
+  
+    <mat-step [stepControl]="forms.personalInformation" *ngIf="steps[1]">
+      <form formGroupName="personal_information">
+  
+        <ng-template matStepLabel>Personal information</ng-template>
+  
+        <mat-form-field color="accent" appearance="outline">
+          <mat-label>First name</mat-label>
+          <input matInput required autocomplete="off" formControlName="fn">
+        </mat-form-field>
+        <br>
+        <mat-form-field color="accent" appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input matInput required autocomplete="off" formControlName="ln">
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline">
+          <mat-label>Address</mat-label>
+          <textarea matInput required autocomplete="off" matTextareaAutosize matAutosize="true" matAutosizeMinRows="5" formControlName="motes" formControlName="address">
+          </textarea>
+        </mat-form-field>
+  
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+  
+      </form>
+    </mat-step>
+  
+    <mat-step [stepControl]="forms.socialMedia" *ngIf="steps[2]">
+      <form formGroupName="social_media">
+  
+        <ng-template matStepLabel>Accounts</ng-template>
+  
+        <mat-form-field color="accent" appearance="outline">
+          <mat-label>Instagram (username)</mat-label>
+          <input matInput autocomplete="off" formControlName="instagram">
+          <mat-hint>Optional</mat-hint>
+        </mat-form-field>
+        <br>
+        <mat-form-field color="accent" appearance="outline">
+          <mat-label>Facebook (email/phone number)</mat-label>
+          <input matInput autocomplete="off" formControlName="facebook">
+          <mat-hint>Optional</mat-hint>
+        </mat-form-field>
+  
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+  
+      </form>
+    </mat-step>
+  
+    <mat-step [stepControl]="forms.contactDetails" *ngIf="steps[3]">
+      <form formGroupName="contact_details">
+  
+        <ng-template matStepLabel>Contact details</ng-template>
+  
+        <mat-form-field color="accent" appearance="outline">
+          <mat-label>Phone</mat-label>
+          <input matInput required autocomplete="off" type="number" formControlName="phone">
+        </mat-form-field>
+        <br>
+        <mat-form-field color="accent" appearance="outline">
+          <mat-label>Update email address</mat-label>
+          <input matInput autocomplete="off" formControlName="email">
+          <mat-hint>Optional</mat-hint>
+        </mat-form-field>
+        <br>
+        <mat-form-field color="accent" appearance="outline">
+          <mat-label>Create password</mat-label>
+          <input matInput type="password" autocomplete="off" formControlName="password">
+          <mat-hint>Optional</mat-hint>
+        </mat-form-field>
+  
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+  
+      </form>
+    </mat-step>
+  
+    <mat-step *ngIf="steps[4]">
+  
+      <ng-template matStepLabel>Done</ng-template>
+  
+      <p>You are now done.</p>
+      <p>Click submit to continue.</p>
+  
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext (click)="submit()">Submit</button>
+      </div>
+  
+    </mat-step>
+  
+  </mat-vertical-stepper>
+</div>
+

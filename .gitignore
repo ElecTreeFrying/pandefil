@@ -5,6 +5,7 @@
 .firebase
 .firebaserc
 *.spec.ts
+notes.md
 
 # environments
 /src/environments/**

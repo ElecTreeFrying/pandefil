@@ -1,10 +1,13 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MatSelectionListChange } from '@angular/material/list';
 import * as moment from 'moment';
 
 import { FirebaseService } from '../_common/services/firebase.service';
+import { SharedService } from '../_common/services/shared.service';
 
 import { order_menu, breads, crumbs, filings, services, time } from '../_common/services/shared.service';
 import { formA, formB, formC, formD } from './form';
@@ -26,13 +29,18 @@ export class OrderComponent implements OnInit {
   steps: any[];
   dynamic: any;
   isNextDisable: any;
+  selectedStep: number;
+
+  selectedItem: number;
+  selectedItemName: string;
   
   constructor(
+    private router: Router,
     private fb: FormBuilder,
-    private cd: ChangeDetectorRef,
     private iconRegistry: MatIconRegistry, 
     private sanitizer: DomSanitizer,
-    private fire: FirebaseService
+    private fire: FirebaseService,
+    private shared: SharedService
   ) { 
     iconRegistry.addSvgIcon(
       'dollar-sign-solid',
@@ -40,11 +48,24 @@ export class OrderComponent implements OnInit {
     );
   }
 
+  sampleData() {
+    this.formC.patchValue({
+      fn: 'John James',
+      ln: 'Ermitaño',
+      address: '5 High Ridge Lane Ambler, PA 19002',
+      phone: 1234567
+    });
+    this.formD.patchValue({
+      date: moment()
+    })    
+  }
+
   ngOnInit(): void {
   
     this.initializeVariables();
     this.initializeForms();
     this.formChanges();
+    // this.sampleData();
   }
 
   private initializeVariables() {
@@ -76,12 +97,29 @@ export class OrderComponent implements OnInit {
       orders: this.fb.array([ this.fb.group(formA) ])
     });
 
-    this.formB = this.fb.group(formB);
+    this.formB = this.fb.group({
+      flavors: this.fb.array([ this.fb.group(formB) ])
+    });
 
     this.formC = this.fb.group(formC);
 
     this.formD = this.fb.group(formD);
+
+    this.formC.patchValue(this.shared.userData);
+
   }
+
+  get filingCount() {
+    if (!this.selectedItemName) return 4;
+    else if (this.selectedItemName.includes('Per piece')) return 4;
+    return +this.selectedItemName.split('-')[0].replace(/\D/g, '');
+  }
+
+  selectedFilingsFactory: any = {
+    0: null, 1: null, 2: null, 3: null, 4: null, 5: null
+  };
+
+  hideFillings: boolean = false;
 
   private formChanges() {
 
@@ -93,9 +131,29 @@ export class OrderComponent implements OnInit {
     });
 
     this.formB.valueChanges.subscribe((res: any) => {
+
       setTimeout(() => {
         this.isNextDisable.formB = this.formB.invalid;
       });
+
+      if (this.selectedStep !== 1) return;
+
+      const selected = !this.selectedItem ? 0 : this.selectedItem;
+
+      if (typeof res.flavors[selected].filings === 'string') {
+        
+        this.selections.filings = filings;
+      } else {
+
+        const selectedFilings = res.flavors[selected].filings.map(e => filings[e]);
+  
+        if (selectedFilings.length === this.filingCount) {
+          this.selections.filings = selectedFilings;
+          this.selectedFilingsFactory[this.selectedItem] = selectedFilings;
+        } else {
+          this.selections.filings = filings;
+        }
+      }
     });
     
     this.formC.valueChanges.subscribe((res: any) => {
@@ -123,17 +181,32 @@ export class OrderComponent implements OnInit {
     });
   }
 
+  log(event: MatSelectionListChange) {
+
+    this.selectedItem = event.option.value;
+
+    setTimeout(() => {
+      this.hideFillings = this.selectedItemName.includes('NO FILLINGS'); 
+    }, 15);
+
+    if (!this.selectedFilingsFactory[this.selectedItem]) {
+      this.selections.filings = filings;
+    } else {
+      this.selections.filings = this.selectedFilingsFactory[this.selectedItem];
+    }
+  }
+
   get $formA() {
     return {
-      order_menu: this.formA.get('order_menu'),
-      order_menu_quantity: this.formA.get('order_menu_quantity'),
       orders: this.formA.get('orders') as FormArray,
+      flavors: this.formB.get('flavors') as FormArray
     }
   }
 
   addOrder() { 
 
     this.$formA.orders.push(this.fb.group(formA)); 
+    this.$formA.flavors.push(this.fb.group(formB)); 
 
     const length = this.$formA.orders.length - 1;
 
@@ -142,11 +215,22 @@ export class OrderComponent implements OnInit {
 
   removeAddedOrder(index: number) {
     this.$formA.orders.removeAt(index); 
+    this.$formA.flavors.removeAt(index);
+    this.selectedFilingsFactory[index] = this.selectedFilingsFactory[index+1];
+    this.selectedFilingsFactory[index+1] = null;
+    console.log(index);
   }
 
-  process() {
+  process(step: any) {
+
+    if (step.selectedIndex !== 4) return;
 
     if (this.formA.invalid || this.formB.invalid || this.formC.invalid || this.formD.invalid) return;
+
+    const orders = this.formA.value.orders.map((res: any) => {
+      res.no_filings = !res.order.includes('$15');
+      return res;
+    });
 
     const price = this.formA.value.orders.map((res: any) => {
       
@@ -162,15 +246,36 @@ export class OrderComponent implements OnInit {
 
     const order_date = moment().format('MMMM Do YYYY, h:mm:ss a');
 
+    const flavors = this.formB.value.flavors.map((res) => {
+      
+      if (typeof res.filings === 'string') {
+        res.filings = [];
+        return res;
+      }
+
+      res.filings = res.filings.map((index) => filings.find(e => e.id === index).display);
+
+      return res;
+    });
+
     this.form = {
-      ...this.formA.value, ...this.formB.value,
+      orders, flavors,
       ...this.formC.value, ...this.formD.value,
       price, date, order_date
     };
+
+  }
+
+  personalInformation() {
+
+  }
+
+  exit() {
+    this.shared.guardFactory = 0;
+    this.router.navigate([ '/' ]);
   }
 
   submit() {
-    this.process();
     this.fire.order = this.form;
   }
 

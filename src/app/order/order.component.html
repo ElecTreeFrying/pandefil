@@ -8,16 +8,16 @@
   </button>
 
   <mat-menu #formMenu="matMenu" xPosition="before" yPosition="below">
-    <button mat-menu-item>Personal information</button>
-    <button mat-menu-item>Re-enter email</button>
-    <button mat-menu-item>Exit</button>
+    <button mat-menu-item disabled (click)="personalInformation()">Personal information</button>
+    <button mat-menu-item (click)="exit()">Re-enter email</button>
+    <button mat-menu-item (click)="exit()">Exit</button>
   </mat-menu>
 
 </mat-toolbar>
 
 <div class="content" data-simplebar>
 
-  <mat-vertical-stepper linear="false" (selectionChange)="process()" class="item" #stepper *ngIf="steps[0]"> 
+  <mat-vertical-stepper linear="true" (selectionChange)="selectedStep = $event.selectedIndex;process($event)" class="item" #stepper *ngIf="steps[0]"> 
 
     <!-- step a -->
 
@@ -65,39 +65,64 @@
 
         <ng-template matStepLabel>Add-on</ng-template>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Bread</mat-label>
-          <mat-select required formControlName="bread">
-            <mat-option *ngFor="let bread of selections.breads" [value]="bread.display">
-              {{ bread.display }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <br>
-        <mat-form-field appearance="outline">
-          <mat-label>Crumbs</mat-label>
-          <mat-select required formControlName="crumbs">
-            <mat-option *ngFor="let crumb of selections.crumbs" [value]="crumb.display">
-              {{ crumb.display }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <br>
-        <mat-form-field appearance="outline">
-          <mat-label>Filings</mat-label>
-          <mat-select required formControlName="filings">
-            <mat-option *ngFor="let filing of selections.filings" [value]="filing.display">
-              {{ filing.display }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <br>
-        <mat-form-field appearance="outline">
-          <mat-label>Notes</mat-label>
-          <textarea matInput matTextareaAutosize matAutosize="true" matAutosizeMinRows="5" formControlName="motes" formControlName="notes">
-          </textarea>
-        </mat-form-field> 
-        <br>
+        <div class="flavor-content">
+          
+          <div class="flavor-orders">
+            <mat-selection-list [multiple]="false" #selection_list (selectionChange)="log($event)">
+              <mat-list-option *ngFor="let control of $formA?.orders.controls; let i = index" [value]="i" (click)="selectedItemName = control?.value?.order">{{ control?.value?.order | orderForm: 'order-name' }}</mat-list-option>
+            </mat-selection-list>
+          </div>
+
+          <div class="flavor-forms" formArrayName="flavors">
+            <div class="flavor-form" *ngFor="let flavor of $formA.flavors.controls; let i = index" [formGroupName]="i">
+              <div *ngIf="i === selectedItem">
+
+                <p><strong>Order: {{ selectedItemName | orderForm: 'order-name' }}</strong></p>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Bread</mat-label>
+                  <mat-select required formControlName="bread">
+                    <mat-option *ngFor="let bread of selections.breads" [value]="bread.display">
+                      {{ bread.display }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <br>
+                <mat-form-field appearance="outline">
+                  <mat-label>Crumbs</mat-label>
+                  <mat-select required formControlName="crumbs">
+                    <mat-option *ngFor="let crumb of selections.crumbs" [value]="crumb.display">
+                      {{ crumb.display }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <br>
+                <mat-form-field appearance="outline" *ngIf="!hideFillings">
+                  <mat-label>Fillings</mat-label>
+                  <mat-select required formControlName="filings" multiple #select>
+                    <mat-select-trigger>
+                      <span>{{ selections?.filings[0]?.display }}</span>
+                      <span *ngIf="select?.value?.length > 1">
+                        <span> (+{{ select?.value?.length - 1 }}</span> 
+                        <span> {{ select?.value?.length === 2 ? 'other' : 'others' }})</span>
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let filing of selections?.filings" [value]="filing.id">{{ filing?.display }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <br *ngIf="!hideFillings">
+                <mat-form-field appearance="outline">
+                  <mat-label>Notes</mat-label>
+                  <textarea matInput matTextareaAutosize matAutosize="true" matAutosizeMinRows="5" formControlName="motes" formControlName="notes">
+                  </textarea>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+         
 
         <div>
           <button mat-button matStepperPrevious>Back</button>
@@ -117,8 +142,7 @@
         <mat-form-field appearance="outline">
           <mat-label>First name</mat-label>
           <input matInput required autocomplete="off" formControlName="fn">
-        </mat-form-field
-        >
+        </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Last name</mat-label>
           <input matInput required autocomplete="off" formControlName="ln">
@@ -130,14 +154,24 @@
         </mat-form-field>
         <br>
         <mat-form-field appearance="outline">
-          <mat-label>Instagram</mat-label>
-          <input matInput required autocomplete="off" formControlName="instagram">
+          <mat-label>Email address</mat-label>
+          <input matInput required type="email" autocomplete="off" formControlName="email">
         </mat-form-field>
-
         <mat-form-field appearance="outline">
           <mat-label>Phone</mat-label>
-          <input matInput required autocomplete="off" type="number" formControlName="phone">
+          <input matInput required type="number" autocomplete="off" type="number" formControlName="phone">
         </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline" style="width: 350px;">
+          <mat-label>Instagram (username)</mat-label>
+          <input matInput autocomplete="off" formControlName="instagram">
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline" style="width: 350px;">
+          <mat-label>Facebook (email/phone number)</mat-label>
+          <input matInput autocomplete="off" formControlName="facebook">
+        </mat-form-field>
+        <br>
         
         <div>
           <button mat-button matStepperPrevious>Back</button>
@@ -199,21 +233,35 @@
 
         <p class="text heading"><strong>Orders:</strong> </p>
         
-        <p class="text" *ngFor="let item of form?.orders">• {{ item?.order | orderForm: 'order' }} - <em>({{ item | orderForm: 'quantity' }}pcs, ${{ item?.order | orderForm: 'price' }}/each)</em></p>
+        <div class="text" *ngFor="let item of form?.orders; let i = index;">
+          
+          <p class="order">• {{ item?.order | orderForm: 'order' }} - <em>({{ item | orderForm: 'quantity' }}pcs, ${{ item?.order | orderForm: 'price': (item | orderForm: 'quantity') }})</em>
+          </p>
+        
+          <p class="details">
+            <strong>Bread:</strong> {{ i | orderForm: 'details-bread': form?.flavors }} Bread
+          </p>
+          <p class="details">
+            <strong>Crumbs:</strong> {{ i | orderForm: 'details-crumbs': form?.flavors }}
+          </p>
+          <p class="details" *ngIf="item?.no_filings">
+            <strong>Filings:</strong> {{ i | orderForm: 'details-filings': form?.flavors}}
+          </p>
+          <p class="notes" *ngIf="(i | orderForm: 'details-notes': form?.flavors) !== ''">
+            <strong>Notes:</strong> {{ i | orderForm: 'details-notes': form?.flavors }}
+          </p>
+        
+        </div>
         
         <p class="text heading"><strong>Service:</strong> {{ form?.services }}</p>
         <p class="text heading"><strong>Delivery date:</strong> {{ form?.date }} - {{ form?.time }}</p>
-        
-        <p class="text heading"><strong>Details:</strong> </p>
-        <p class="text">{{ form?.bread }} Bread with {{ form?.crumbs }} and {{ form?.fillings }}</p>
-        <p class="text heading"><strong>Notes:</strong> </p>
-        <p class="text"><em>{{ form?.notes }}</em></p>
         
         <p class="text heading"><strong>Total price:</strong> ${{ form?.price }}.00</p>
         
         <p class="text heading"><strong>Personal Information</strong></p>
         <p class="text"><strong>Name:</strong> {{ form?.fn }} {{ form?.ln }}</p>
-        <p class="text"><strong>Instagram:</strong> {{ form?.instagram }}</p>
+        <p class="text"><strong>Instagram:</strong> {{ form?.instagram | orderForm: 'instagram' }}</p>
+        <p class="text"><strong>Facebook:</strong> {{ form?.facebook | orderForm: 'facebook' }}</p>
         <p class="text"><strong>Contact:</strong> {{ form?.phone }}</p>
         <p class="text"><strong>Address:</strong> {{ form?.address }} </p>
 

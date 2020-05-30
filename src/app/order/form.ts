@@ -16,7 +16,9 @@ export const formC = {
   fn: [ '', [  ] ],
   ln: [ '', [  ] ],
   address: [ '', [  ] ],
+  email: [ '', [  ] ],
   instagram: [ '', [  ] ],
+  facebook: [ '', [  ] ],
   phone: [ '', [  ] ]
 };
 
