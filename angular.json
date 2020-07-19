@@ -39,7 +39,13 @@
             ],
             "allowedCommonJsDependencies": [
               "simplebar",
-              "core-js"
+              "core-js",
+              "firebase/app",
+              "@firebase/app",
+              "@firebase/auth",
+              "@firebase/firestore",
+              "@firebase/component",
+              "@firebase/util"
             ]
           },
           "configurations": {
@@ -135,6 +141,10 @@
               "devServerTarget": "pandefil:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
     }
