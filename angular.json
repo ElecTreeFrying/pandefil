@@ -36,6 +36,10 @@
             ],
             "scripts": [
               "./node_modules/simplebar/dist/simplebar.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "simplebar",
+              "core-js"
             ]
           },
           "configurations": {
