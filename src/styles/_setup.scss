@@ -2,10 +2,18 @@
 
 @include mat-core();
 
-// @include mat-progress-spinner-theme(
-//   mat-dark-theme(
-//     mat-palette($mat-orange), 
-//     mat-palette($mat-orange), 
-//     mat-palette($mat-orange)
-//   ) 
-// );
+@include mat-progress-spinner-theme(
+  mat-dark-theme(
+    mat-palette($mat-orange), 
+    mat-palette($mat-orange), 
+    mat-palette($mat-orange)
+  ) 
+);
+
+@include mat-progress-bar-theme(
+  mat-dark-theme(
+    mat-palette($mat-orange), 
+    mat-palette($mat-orange), 
+    mat-palette($mat-orange)
+  ) 
+);
